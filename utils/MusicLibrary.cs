@@ -4,12 +4,56 @@ using System.Threading;
 
 namespace Music_player.utils
 {
-    public class MusicLibraryControl
+    public class MusicLibrary
     {
-        //Dictionary<string,string> songs = new Dictionary<string, string>();
         static List<SongProperties> songs = new List<SongProperties>();
 
 
+        MusicPlayerControl control = new MusicPlayerControl();
+
+
+        //Method for displaying music library
+        public void DisplayPlaylist()
+        {
+            if (songs.Count <= 0)
+            {
+                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("\nSong library is currently empty, please add songs...\n");
+                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.White;
+                return;
+            }
+
+
+            foreach (var song in songs)
+            {
+                Console.WriteLine($"{Environment.NewLine}{song._songTitle} by {song._songArtist} - mp3");
+            }
+
+            Console.WriteLine("\n\t1: Play Song\n\t2: Shuffle music library\n\t3: Display songs in alphabetical order");
+
+            string? musicPlayerControlOption = Console.ReadLine();
+
+            switch (musicPlayerControlOption)
+            {
+                case "1":
+                    control.Play(songs);
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    control.SortMusicLibrary(songs);
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\nInvalid choice\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+            }
+        }
+
+
+
+        //Adding song to song list
         public void AddSongs()
         {
             try
@@ -25,14 +69,17 @@ namespace Music_player.utils
 
                 Thread.Sleep(2000);
 
+                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"\n{songTitle} by {songArtist} has been added to music library\n");
+                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.White;
 
             }
-            catch
+            catch(Exception e)
             {
-                Console.WriteLine("Please enter valid inputs");
+                Console.WriteLine(e.Message);
             }
         }
+
 
         //Removing song from song list
         public void RemoveSongs()
@@ -78,35 +125,21 @@ namespace Music_player.utils
                 }
 
             }
-            catch
+            catch(Exception e)
             {
-                Console.WriteLine("Please enter valid inputs");
-            }
-        }
-
-        //Method for displaying music library
-        public void DisplayPlaylist()
-        {
-            if (songs.Count <= 0)
-            {
-                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("\nSong library is currently empty, please add songs...\n");
-                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.White;
-                return;
-            }
-
-            foreach (var song in songs)
-            {
-                Console.WriteLine($"{song._songTitle} by {song._songArtist} - mp3\n");
+                Console.WriteLine(e.Message);
             }
         }
 
 
-        //Function for editing song
+        //Editing song in song list 
         public void EditSong()
         {
             try
             {
+
+                int index = -1, count = 0;
+
                 if (songs.Count <= 0)
                 {
                     Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.Cyan;
@@ -124,20 +157,27 @@ namespace Music_player.utils
                 string? songTitle = Console.ReadLine().ToLower();
 
 
-                var songIndex = songs.FindIndex(song => song._songArtist == songArtist);
-
                 Console.WriteLine("\nChange artist name: ");
                 string? artistNameChange = Console.ReadLine();
 
-                Console.WriteLine("\nChange song title: ");
+                Console.WriteLine("Change song title: ");
                 string? songTitleChange = Console.ReadLine();
 
-                songs[songIndex] = new SongProperties { _songArtist = artistNameChange, _songTitle = songTitleChange };
 
-                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("\nSong updated...\n");
-                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.White;
 
+                foreach (SongProperties song in songs)
+                {
+                    if (song._songArtist.ToLower() == songArtist && song._songTitle.ToLower() == songTitle)
+                    {
+                        index = count;
+                    }
+                    count++;
+                }
+
+                songs.Remove(songs[index]);
+                songs.Add(new SongProperties { _songArtist = artistNameChange, _songTitle = songTitleChange });
+
+                
             }
             catch(Exception e)
             {

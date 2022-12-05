@@ -11,13 +11,13 @@ namespace Music_player
     {
        public void startMusicPlayer()
         {
-            MusicLibraryControl mlc = new MusicLibraryControl();
+            MusicLibrary mlc = new MusicLibrary();
 
             bool musicPlayingRunning = true;
 
             while (musicPlayingRunning)
             {
-                Console.WriteLine("🎧🎧🎧🎧🎧MUSIC PLAYER APP🎧🎧🎧🎧🎧\n1. View Music library\n2. Add song to music library\n3. Remove song from music library\n4. Edit song in music library\n5. Create playlist\n");
+                Console.WriteLine("🎧🎧🎧🎧MUSIC PLAYER APP 🎧🎧🎧🎧🎧\n1. View Music library\n2. Add song to music library\n3. Remove song from music library\n4. Edit song in music library\n5. Create playlist\n");
 
 
                 string? optionSelect = Console.ReadLine();
@@ -25,7 +25,9 @@ namespace Music_player
                 switch (optionSelect)
                 {
                     case "1":
+                        Console.WriteLine("============================================\n\n🎧YOUR MUSIC LIRARY 🎧");
                         mlc.DisplayPlaylist();
+                        Console.WriteLine("\n============================================\n");
                         continue;
                     case "2":
                         mlc.AddSongs();
